@@ -104,3 +104,19 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+*.wav
+*.mp4
+*.csv
+AVdataset_train.txt
+NotPrivate_video_test.txt
+NotPrivate_video_train.txt
+frames/
+frames_test/
+video_train/
+video_test/
+NotPrivate_audio_train.txt
+NotPrivate_audio_test.txt
+audio_train/
+audio_test/

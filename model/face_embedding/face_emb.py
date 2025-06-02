@@ -11,7 +11,7 @@ import os
 
 ## paraeter
 HDF5 = 1
-MODEL_PATH = '../model/keras/facenet_keras.h5'
+MODEL_PATH = '../../data/model/keras/facenet_keras.h5'
 VALID_FRAME_LOG_PATH = '../../data/video_data/valid_face_text.txt'
 FACE_INPUT_PATH = '../../data/video_data/face_input/'
 
@@ -43,6 +43,11 @@ if HDF5:
             else:
                 tailname = '_' + str(i) + '.jpg'
             picname = headname + tailname
+
+            frame_file = FACE_INPUT_PATH + picname
+            if not os.path.exists(frame_file):
+                print('File not found:', frame_file)
+                continue
             # print(picname)
             I = mpimg.imread(FACE_INPUT_PATH + picname)
             I_np = np.array(I)

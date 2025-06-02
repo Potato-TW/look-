@@ -55,15 +55,19 @@ def download_video_frames(loc,d_csv,start_idx,end_idx,rm_video):
     # end_idx    | the ending index of the video to download
     # rm_video   | boolean value for delete video and only keep the frames
 
+    cnt = 0
+
     utils.mkdir('frames')
     for i in range(start_idx, end_idx):
+    # for i in range(len(d_csv)):
         command = 'cd %s;' % loc
         f_name = str(i)
         link = "https://www.youtube.com/watch?v="+d_csv.loc[i][0]
         start_time = d_csv.loc[i][1]
         #start_time = 90
         start_time = time.strftime("%H:%M:%S.0",time.gmtime(start_time))
-        command += 'youtube-dl --prefer-ffmpeg -f "mp4" -o o' + f_name + '.mp4 ' + link + ';'
+        # command += 'youtube-dl --prefer-ffmpeg -f "mp4" -o o' + f_name + '.mp4 ' + link + ';'
+        command += f'yt-dlp --merge-output-format mp4 --output o{f_name}.mp4 {link};'
         command += 'ffmpeg -i o'+f_name+'.mp4'+' -c:v h264 -c:a copy -ss '+str(start_time)+' -t '+"3 "+f_name+'.mp4;'
         command += 'rm o%s.mp4;' % f_name
         #ommand += 'ffmpeg -i %s.mp4 -r 25 %s.mp4;' % (f_name, 'clip_' + f_name)  # convert fps to 25
@@ -78,6 +82,18 @@ def download_video_frames(loc,d_csv,start_idx,end_idx,rm_video):
             command += 'rm %s.mp4;' % f_name
         os.system(command)
         print("\r Process video... ".format(i) + str(i), end="")
+
+        from pathlib import Path
+        file = Path(f'./video_train/{i}.mp4')
+        if file.exists():
+            with open(f'NotPrivate_video_train.txt', 'a') as f:
+                f.write(file.name + '\n')
+            cnt+=1
+            
+        if cnt >= 20000:
+            print("\n Downloaded 20000 videos, stopping...")
+            break
+
     print("\r Finish !!", end="")
 
 utils.mkdir('video_train')
@@ -88,4 +104,4 @@ cat_train = pd.read_csv('../csv/avspeech_train.csv',header=None)
 #avh.generate_frames(loc='video_train',v_name='clip_video_train',start_idx=2,end_idx=4)
 
 # download each video and convert to frames immediately
-download_video_frames(loc='video_train',d_csv=cat_train,start_idx=0,end_idx=20,rm_video=False)
+download_video_frames(loc='video_train',d_csv=cat_train,start_idx=0,end_idx=100000,rm_video=False)

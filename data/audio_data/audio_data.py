@@ -11,7 +11,7 @@ import random
 import math
 import scipy.io.wavfile as wavfile
 
-data_range = (0, 20)  # data usage to generate database
+data_range = (0, 10)  # data usage to generate database
 audio_norm_path = os.path.expanduser("./norm_audio_train")
 database_path = '../AV_model_database'
 frame_valid_path = '../video_data/valid_face_text.txt'
